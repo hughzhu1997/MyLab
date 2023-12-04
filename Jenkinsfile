@@ -23,7 +23,15 @@ pipeline{
             }
         }
 
-        // Stage3 : Publish the source code to Sonarqube
+           // Stage3 : Testing
+        stage ('Publish to Nexus'){
+            steps {
+               nexusArtifactUploader artifacts: [[artifactId: 'MyTestProject', classifier: '', file: 'target/MyTestProject-0.0.3-SNAPSHOT.war', type: 'war']], credentialsId: 'e011c90b-880e-48ae-b427-62a512c8841a', groupId: 'MyTestProject', nexusUrl: '172.20.10.93:8081', nexusVersion: 'nexus3', protocol: 'http', repository: 'Hugh', version: '0.0.2-SNAPSHOT'
+
+            }
+        }
+        
+        // Stage4 : Publish the source code to Sonarqube
         stage ('Sonarqube Analysis'){
             steps {
                 echo ' Source code published to Sonarqube for SCA......'

@@ -5,6 +5,13 @@ pipeline{
         maven 'maven'
     }
 
+    environment{
+       ArtifactId = readMavenPom().getArtifactId()
+       Version = readMavenPom().getVersion()
+       Name = readMavenPom().getName()
+       GroupId = readMavenPom().getGroupId()
+    }
+
     stages {
         // Specify various stage with in stages
 
@@ -29,9 +36,21 @@ pipeline{
                nexusArtifactUploader artifacts: [[artifactId: 'MyTestProject', classifier: '', file: 'target/MyTestProject-0.0.3-SNAPSHOT.jar', type: 'jar']], credentialsId: 'e011c90b-880e-48ae-b427-62a512c8841a', groupId: 'MyTestProject', nexusUrl: '172.20.10.93:8081', nexusVersion: 'nexus3', protocol: 'http', repository: 'Hugh', version: '0.0.3-SNAPSHOT'
 
             }
-        }
+        } 
         
-        // Stage4 : Publish the source code to Sonarqube
+            // Stage 4 : Print some information
+        stage ('Print Environment variables'){
+                    steps {
+                        echo "Artifact ID is '${ArtifactId}'"
+                        echo "Version is '${Version}'"
+                        echo "GroupID is '${GroupId}'"
+                        echo "Name is '${Name}'"
+                    }
+                }
+
+        
+        
+        // Stage 6 : Publish the source code to Sonarqube
         stage ('Sonarqube Analysis'){
             steps {
                 echo ' Source code published to Sonarqube for SCA......'
